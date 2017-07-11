@@ -1,4 +1,7 @@
 Writing Stats is an application in progress that 'reads' text and outputs statistics about that text such
 as average words per sentence, punctuation frequencies, etc.
 
+Uses nltk package - Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O’Reilly Media Inc.
+Uses XML from xml.etree.cElementTree
+
  - Thomas J. Possidente
