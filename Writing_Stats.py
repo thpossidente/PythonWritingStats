@@ -2,10 +2,8 @@
 
 
             ##Helper Functions and Libraries##
-
-
-
-#import('nltk') # doesnt work
+import nltk
+#nltk.download()
 
 
 
@@ -15,7 +13,7 @@ except ImportError:
     from xml.etree.ElementTree import XML
 import zipfile
 
-
+ 
 """
 Module that extract text from MS XML Word document (.docx).
 (Inspired by python-docx <https://github.com/mikemaccana/python-docx>)
@@ -65,6 +63,15 @@ def writing_stats(text):
   sentences_current_paragraph = 0
   paragraph_count = 0
   sentences_per_paragraph = []
+  pronouns = []
+  nouns = []
+  verbs = []
+  adverbs = []
+  conjunctions = []
+  prepositions = []
+  interjections = []
+  adjectives = []
+  articles = []
   first_word = {'pronoun' : 0, 'noun' : 0, 'verb' : 0, 'adverb' : 0, 'conjuction' : 0, 'preposition' : 0, 'interjection' : 0, 'adjective' : 0, 'articles' : 0}
   end_marks = {'period' : 0, 'exclamation point' : 0, 'question mark' : 0}
   other_punctuation = {'comma' : 0, 'semicolon' : 0, 'colon' : 0, 'ampersand' : 0, 'hyphen' : 0, 'exclamation point' : 0, 'period' : 0, 'dash' : 0, 'question mark' : 0, 'parenthesis' : 0, 'quotation mark' : 0, 'ellipses' : 0, 'forward slash' : 0, 'period' : 0}
@@ -77,8 +84,31 @@ def writing_stats(text):
   text = text.split(' ')
   if text[len(text) - 1] == '':
       del text[len(text) - 1]
-          
+
+
+  tagged_text = nltk.pos_tag(text)
+  print(tagged_text)
   print(text)
+
+  for nxt, word in zip(tagged_text[1:]+['i'], tagged_text):
+      if word[1] == 'CC':
+          conjunctions.append(word)
+      if word[1] == 'WP' or word[1] == 'WPS' or word[1] == 'PRP' or word[1] == 'PRP$':
+          pronouns.append(word)
+      if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
+          nouns.append(word)
+      if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or word[1] == 'VBP' or word[1] == 'VBZ':
+          verbs.append(word)
+      if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
+          adverbs.append(word)
+      if word[1] == 'IN':
+          prepositions.append(word)
+      if word[1] == 'UH':
+          interjections.append(word)
+      if word[1] == 'JJ' or word[1] == 'JJR' or word[1] == 'JJS':
+          adjectives.append(word)
+      if word[1] == 'DT' or word[1] == 'WDT':
+          articles.append(word)
   
   for nxt, word in zip(text[1:]+['i'], text):  
     if word != '-' and word!= '&':
@@ -236,6 +266,9 @@ def writing_stats(text):
       percent_active = voice_per_sentence['active']/float(sentence_count)
       percent_unsure = voice_per_sentence['unsure']/float(sentence_count)
       percentages_voice = {'Percent passive' : percent_passive, 'Percent active' : percent_active, 'Percent unsure' : percent_unsure}
+
+
+
   
   print('\n', 'Paragraph count: ' + str(paragraph_count),'\n',
         'Word count: ' + str(word_count),'\n',
@@ -248,7 +281,8 @@ def writing_stats(text):
         'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),'\n',
         'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice)
        )
-  print(words_per_sentence)
+
+
 
 writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc (1).docx"))
 #writing_stats(text)   Use if no word doc input (comment out line above)
@@ -266,6 +300,49 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc (1).docx"))
 
 
 
+''' Key for POS tags from nltk
+
+Number
+Tag
+Description
+1.	CC	Coordinating conjunction *
+2.	CD	Cardinal number
+3.	DT	Determiner (articles) *
+4.	EX	Existential there
+5.	FW	Foreign word
+6.	IN	Preposition or subordinating conjunction *
+7.	JJ	Adjective *
+8.	JJR	Adjective, comparative *
+9.	JJS	Adjective, superlative *
+10.	LS	List item marker
+11.	MD	Modal
+12.	NN	Noun, singular or mass *
+13.	NNS	Noun, plural *
+14.	NNP	Proper noun, singular *
+15.	NNPS	Proper noun, plural *
+16.	PDT	Predeterminer
+17.	POS	Possessive ending
+18.	PRP	Personal pronoun *
+19.	PRP$	Possessive pronoun *
+20.	RB	Adverb *
+21.	RBR	Adverb, comparative *
+22.	RBS	Adverb, superlative *
+23.	RP	Particle
+24.	SYM	Symbol
+25.	TO	to
+26.	UH	Interjection *
+27.	VB	Verb, base form *
+28.	VBD	Verb, past tense *
+29.	VBG	Verb, gerund or present participle *
+30.	VBN	Verb, past participle *
+31.	VBP	Verb, non-3rd person singular present *
+32.	VBZ	Verb, 3rd person singular present *
+33.	WDT	Wh-determiner (articles) *
+34.	WP	Wh-pronoun *
+35.	WP$	Possessive wh-pronoun *
+36.	WRB	Wh-adverb *
+
+'''
 
 
 
