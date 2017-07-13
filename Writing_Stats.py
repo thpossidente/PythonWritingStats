@@ -3,6 +3,7 @@
 
             ##Helper Functions and Libraries##
 import nltk
+import collections
 #nltk.download()
 
 
@@ -85,31 +86,8 @@ def writing_stats(text):
   if text[len(text) - 1] == '':
       del text[len(text) - 1]
 
-
-  tagged_text = nltk.pos_tag(text)
-  print(tagged_text)
   print(text)
 
-  for nxt, word in zip(tagged_text[1:]+['i'], tagged_text):
-      if word[1] == 'CC':
-          conjunctions.append(word)
-      if word[1] == 'WP' or word[1] == 'WPS' or word[1] == 'PRP' or word[1] == 'PRP$':
-          pronouns.append(word)
-      if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
-          nouns.append(word)
-      if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or word[1] == 'VBP' or word[1] == 'VBZ':
-          verbs.append(word)
-      if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
-          adverbs.append(word)
-      if word[1] == 'IN':
-          prepositions.append(word)
-      if word[1] == 'UH':
-          interjections.append(word)
-      if word[1] == 'JJ' or word[1] == 'JJR' or word[1] == 'JJS':
-          adjectives.append(word)
-      if word[1] == 'DT' or word[1] == 'WDT':
-          articles.append(word)
-  
   for nxt, word in zip(text[1:]+['i'], text):  
     if word != '-' and word!= '&':
       word_count += 1
@@ -267,7 +245,35 @@ def writing_stats(text):
       percent_unsure = voice_per_sentence['unsure']/float(sentence_count)
       percentages_voice = {'Percent passive' : percent_passive, 'Percent active' : percent_active, 'Percent unsure' : percent_unsure}
 
+  new_text = []
+  for word in text:
+    word = word.replace('@@', ' ')
+    new_text.append(word)
+    
+  print(new_text)
+  tagged_text = nltk.pos_tag(new_text)
+  print(tagged_text)
 
+  for nxt, word in zip(tagged_text[1:]+['i'], tagged_text):
+      if word[1] == 'CC':
+          conjunctions.append(word[0])
+      if word[1] == 'WP' or word[1] == 'WPS' or word[1] == 'PRP' or word[1] == 'PRP$':
+          pronouns.append(word[0])
+      if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
+          nouns.append(word[0])
+      if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or word[1] == 'VBP' or word[1] == 'VBZ':
+          verbs.append(word[0])
+      if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
+          adverbs.append(word[0])
+      if word[1] == 'IN':
+          prepositions.append(word[0])
+      if word[1] == 'UH':
+          interjections.append(word[0])
+      if word[1] == 'JJ' or word[1] == 'JJR' or word[1] == 'JJS':
+          adjectives.append(word[0])
+      if word[1] == 'DT' or word[1] == 'WDT' or word[1] == 'PDT':
+          articles.append(word[0])
+  
 
   
   print('\n', 'Paragraph count: ' + str(paragraph_count),'\n',
@@ -296,15 +302,14 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc (1).docx"))
   #part of speech - using nltk
   #graphs for words_per_sentence and sentences_per_paragraph
   #does not 'read' footnotes - convert to regular text before uploading file
-  #need to import nltk, try from __, import ___
+
+  #POS counting
+  #removing @@s and splitting up words for POS tagging
 
 
+''' Key for POS tags from nltk     * = used, - = unused
 
-''' Key for POS tags from nltk
-
-Number
-Tag
-Description
+Number  Tag     Description
 1.	CC	Coordinating conjunction *
 2.	CD	Cardinal number
 3.	DT	Determiner (articles) *
@@ -320,16 +325,16 @@ Description
 13.	NNS	Noun, plural *
 14.	NNP	Proper noun, singular *
 15.	NNPS	Proper noun, plural *
-16.	PDT	Predeterminer
-17.	POS	Possessive ending
+16.	PDT	Predeterminer *
+17.	POS	Possessive ending - 
 18.	PRP	Personal pronoun *
 19.	PRP$	Possessive pronoun *
 20.	RB	Adverb *
 21.	RBR	Adverb, comparative *
 22.	RBS	Adverb, superlative *
-23.	RP	Particle
-24.	SYM	Symbol
-25.	TO	to
+23.	RP	Particle  -
+24.	SYM	Symbol  -
+25.	TO	to  -
 26.	UH	Interjection *
 27.	VB	Verb, base form *
 28.	VBD	Verb, past tense *
