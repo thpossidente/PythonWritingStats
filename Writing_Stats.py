@@ -79,12 +79,15 @@ def writing_stats(text):
   voice_per_sentence = {'passive' : 0, 'active' : 0, 'unsure': 0}
   passive_current_sentence = 0
 
-  text = text.replace('\n\n', '@@')
+  text = text.replace('\n\n', ' @@')
   text = text.replace('\u201c', '"')
   text = text.replace('\u201d', '"')
   text = text.split(' ')
-  if text[len(text) - 1] == '':
-      del text[len(text) - 1]
+  
+  for word in text:
+      if word == '':
+          text.remove(word)
+
 
   print(text)
 
@@ -247,10 +250,10 @@ def writing_stats(text):
 
   new_text = []
   for word in text:
-    word = word.replace('@@', ' ')
+    word = word.replace('@@', '')
     new_text.append(word)
-    
-  print(new_text)
+
+          
   tagged_text = nltk.pos_tag(new_text)
   print(tagged_text)
 
