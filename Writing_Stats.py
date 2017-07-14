@@ -288,10 +288,21 @@ def writing_stats(text):
   
   
   count_nouns = collections.Counter(nouns)
+  count_nouns.update({' ' : 0, '  ' : 0, '   ' : 0, '    ' : 0, '     ' : 0})
+  count_nouns = list(count_nouns.items())
+
   count_verbs = collections.Counter(verbs)
+  count_verbs.update({' ' : 0, '  ' : 0, '   ' : 0, '    ' : 0, '     ' : 0})
+  count_verbs = list(count_verbs.items())
+
   count_adverbs = collections.Counter(adverbs)
+  count_adverbs.update({' ' : 0, '  ' : 0, '   ' : 0, '    ' : 0, '     ' : 0})
+  count_adverbs = list(count_adverbs.items())
+
   count_adjectives = collections.Counter(adjectives)
-      
+  count_adjectives.update({' ' : 0, '  ' : 0, '   ' : 0, '    ' : 0, '     ' : 0})
+  count_adverbs = list(count_adverbs.items())
+  
   
   print('\n', 'Paragraph count: ' + str(paragraph_count),'\n',
         'Word count: ' + str(word_count),'\n',
@@ -302,7 +313,12 @@ def writing_stats(text):
         'Average sentences per paragraph: ' + str(ave_sentences_per_paragraph),'\n',
         'End mark frequencies: ' + str(end_marks),'\n',
         'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),'\n',
-        'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice)
+        'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice), '\n',
+        'Most used nouns: ' + str(count_nouns[0:5]), '\n',
+        'Most used verbs: ' + str(count_verbs[0:5]), '\n',
+        'Most used adjectives: ' + str(count_adjectives[0:5]), '\n',
+        'Most used adverbs: ' + str(count_adverbs[0:5]), '\n'
+                                  
        )
 
 
