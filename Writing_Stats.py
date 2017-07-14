@@ -102,7 +102,11 @@ def writing_stats(text):
       sentences_current_paragraph = 0
       letter_count -= 2
       letters_current_word -= 2
-      
+
+    if nxt == 'i':
+      paragraph_count += 1
+      sentences_per_paragraph.append(sentences_current_paragraph)
+    
     if word == '-':
       other_punctuation['dash'] += 1
       letter_count -= 1
@@ -147,6 +151,7 @@ def writing_stats(text):
       if passive_current_sentence == 2:
         voice_per_sentence['unsure'] += 1
       passive_current_sentence = 0
+
     
     if (word[len(word) - 1] == '?' and (nxt[0].isupper() or nxt[0] == '"' or nxt[0:2] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
@@ -174,8 +179,6 @@ def writing_stats(text):
         voice_per_sentence['unsure'] += 1
       passive_current_sentence = 0
       
-    if word[len(word) - 1] == '.' and (nxt[0].isupper() == False and nxt[0] != '"') and word != text[len(text) - 1]:
-      other_punctuation['period'] += 1
       
     if len(word) > 3 and '...' in word: 
       other_punctuation['ellipses'] += 1
@@ -227,11 +230,14 @@ def writing_stats(text):
           letter_count -= 1
           letters_current_word -= 1
         
-      list_letters = list(enumerate(word))
-      if letter == list_letters[len(list_letters) - 1][1]:
+    lst_letters = list(enumerate(word))
+    for letter in lst_letters:
+      if letter == lst_letters[len(lst_letters)-1]:
         letters_per_word.append(letters_current_word)
         letters_current_word = 0
 
+
+  
   other_punctuation['period'] = other_punctuation['period'] - end_marks['period'] - (3 * other_punctuation['ellipses'])
   other_punctuation['question mark'] = other_punctuation['question mark'] - end_marks['question mark']
   other_punctuation['exclamation point'] = other_punctuation['exclamation point'] - end_marks['exclamation point']  
@@ -293,21 +299,21 @@ def writing_stats(text):
 
 
 
-writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc (1).docx"))
-#writing_stats(text)   Use if no word doc input (comment out line above)
+writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1082CreationMyth.docx"))
+#writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
 
 
         ##Notes##
 
-  #repetitive verbs, nouns, adverbs, adjectives
-  #passive vs active - make better using POS tagging for is/was/were/be/ + past tence as passive
-  #part of speech - using nltk
   #graphs for words_per_sentence and sentences_per_paragraph
   #does not 'read' footnotes - convert to regular text before uploading file
 
-  #POS counting
-  #removing @@s and splitting up words for POS tagging
+  #POS counting most frequent in each POS
+  #POS first word in sentence
+  #passive vs active - make better using POS tagging for is/was/were/be/ + past tence as passive
+
+  
 
 
 ''' Key for POS tags from nltk     * = used, - = unused
