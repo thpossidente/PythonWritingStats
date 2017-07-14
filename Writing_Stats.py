@@ -4,6 +4,7 @@
             ##Helper Functions and Libraries##
 import nltk
 import collections
+import re
 #nltk.download()
 
 
@@ -264,26 +265,33 @@ def writing_stats(text):
   print(tagged_text)
 
   for nxt, word in zip(tagged_text[1:]+['i'], tagged_text):
+      alpha_word = re.sub("[^a-zA-Z]+", "", word[0])
+      alpha_word = alpha_word.lower()
       if word[1] == 'CC':
-          conjunctions.append(word[0])
+          conjunctions.append(alpha_word)
       if word[1] == 'WP' or word[1] == 'WPS' or word[1] == 'PRP' or word[1] == 'PRP$':
-          pronouns.append(word[0])
+          pronouns.append(alpha_word)
       if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
-          nouns.append(word[0])
+          nouns.append(alpha_word)
       if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or word[1] == 'VBP' or word[1] == 'VBZ':
-          verbs.append(word[0])
+          verbs.append(alpha_word)
       if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
-          adverbs.append(word[0])
+          adverbs.append(alpha_word)
       if word[1] == 'IN':
-          prepositions.append(word[0])
+          prepositions.append(alpha_word)
       if word[1] == 'UH':
-          interjections.append(word[0])
+          interjections.append(alpha_word)
       if word[1] == 'JJ' or word[1] == 'JJR' or word[1] == 'JJS':
-          adjectives.append(word[0])
+          adjectives.append(alpha_word)
       if word[1] == 'DT' or word[1] == 'WDT' or word[1] == 'PDT':
-          articles.append(word[0])
+          articles.append(alpha_word)
   
-
+  
+  count_nouns = collections.Counter(nouns)
+  count_verbs = collections.Counter(verbs)
+  count_adverbs = collections.Counter(adverbs)
+  count_adjectives = collections.Counter(adjectives)
+      
   
   print('\n', 'Paragraph count: ' + str(paragraph_count),'\n',
         'Word count: ' + str(word_count),'\n',
@@ -299,7 +307,7 @@ def writing_stats(text):
 
 
 
-writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1082CreationMyth.docx"))
+writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\2086Host.docx"))
 #writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
 
