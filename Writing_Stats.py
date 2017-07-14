@@ -306,13 +306,17 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1082CreationMyth.docx"))
 
         ##Notes##
 
-  #graphs for words_per_sentence and sentences_per_paragraph
-  #does not 'read' footnotes - convert to regular text before uploading file
+
+  # - does not 'read' footnotes - convert to regular text at end of docx before uploading file
+  # - Remove Title/cover page/author line/etc. before uploading docx. Extra lines
+  #   of this kind will result in inflated paragraph count and deflated average sentences per
+  #   paragraph count
+
 
   #POS counting most frequent in each POS
   #POS first word in sentence
   #passive vs active - make better using POS tagging for is/was/were/be/ + past tence as passive
-
+  #graphs for words_per_sentence and sentences_per_paragraph
   
 
 
