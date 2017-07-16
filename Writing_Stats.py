@@ -74,9 +74,10 @@ def writing_stats(text):
   interjections = []
   adjectives = []
   articles = []
-  first_word = {'pronoun' : 0, 'noun' : 0, 'verb' : 0, 'adverb' : 0, 'conjuction' : 0, 'preposition' : 0, 'interjection' : 0, 'adjective' : 0, 'articles' : 0}
+  first_word = {'pronoun' : 0, 'noun' : 0, 'verb' : 0, 'adverb' : 0, 'conjunction' : 0, 'preposition' : 0, 'interjection' : 0, 'adjective' : 0, 'article' : 0}
   end_marks = {'period' : 0, 'exclamation point' : 0, 'question mark' : 0}
-  other_punctuation = {'comma' : 0, 'semicolon' : 0, 'colon' : 0, 'ampersand' : 0, 'hyphen' : 0, 'exclamation point' : 0, 'period' : 0, 'dash' : 0, 'question mark' : 0, 'parenthesis' : 0, 'quotation mark' : 0, 'ellipses' : 0, 'forward slash' : 0, 'period' : 0}
+  other_punctuation = {'comma' : 0, 'semicolon' : 0, 'colon' : 0, 'ampersand' : 0, 'hyphen' : 0, \
+                       'exclamation point' : 0, 'period' : 0, 'dash' : 0, 'question mark' : 0, 'parenthesis' : 0, 'quotation mark' : 0, 'ellipses' : 0, 'forward slash' : 0, 'period' : 0}
   voice_per_sentence = {'passive' : 0, 'active' : 0, 'unsure': 0}
   passive_current_sentence = 0
 
@@ -119,13 +120,20 @@ def writing_stats(text):
     lower = word.lower()
     lower_nxt = nxt.lower()
     
-    if lower.strip('.') == 'was' or lower.strip('.') == 'were' or lower.strip('.') == 'be' or lower.strip('.') == 'been':
+    if lower.strip('.') == 'was' or lower.strip('.') == 'were' \
+       or lower.strip('.') == 'be' or lower.strip('.') == 'been':
       passive_current_sentence += 1
   
-    if (lower.strip('.') == 'has' and lower_nxt.strip('.') == 'been') or (lower.strip('.') == 'is' and lower_nxt.strip('.') == 'being') or (lower.strip('.') == 'have' and lower_nxt.strip('.') == 'been') or (lower.strip('.') == 'was' and lower_nxt.strip('.') == 'being') or (lower.strip('.') == 'were' and lower_nxt.strip('.') == 'being') or (lower.strip('.') == 'had' and lower_nxt.strip('.') == 'been'):
+    if (lower.strip('.') == 'has' and lower_nxt.strip('.') == 'been') or \
+       (lower.strip('.') == 'is' and lower_nxt.strip('.') == 'being') or \
+       (lower.strip('.') == 'have' and lower_nxt.strip('.') == 'been') or \
+       (lower.strip('.') == 'was' and lower_nxt.strip('.') == 'being') or (lower.strip('.') == 'were' \
+        and lower_nxt.strip('.') == 'being') or (lower.strip('.') == 'had' and \
+        lower_nxt.strip('.') == 'been'):
       passive_current_sentence += 3
 
-    if (word[len(word) - 1] == '.' and (nxt[0].isupper() or nxt[0] == '"' or nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    if (word[len(word) - 1] == '.' and (nxt[0].isupper() or nxt[0] == '"' or \
+                                        nxt[0:2] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
       sentences_current_paragraph += 1
       words_per_sentence.append(words_current_sentence)
@@ -154,7 +162,8 @@ def writing_stats(text):
       passive_current_sentence = 0
 
     
-    if (word[len(word) - 1] == '?' and (nxt[0].isupper() or nxt[0] == '"' or nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    if (word[len(word) - 1] == '?' and (nxt[0].isupper() or nxt[0] == '"' or \
+                                        nxt[0:2] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
       words_per_sentence.append(words_current_sentence)
       words_current_sentence = 0
@@ -167,7 +176,8 @@ def writing_stats(text):
         voice_per_sentence['unsure'] += 1
       passive_current_sentence = 0
       
-    if (word[len(word) - 1] == '!' and (nxt[0].isupper() or nxt[0] == '"' or nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    if (word[len(word) - 1] == '!' and (nxt[0].isupper() or nxt[0] == '"'  \
+                                        or nxt[0:2] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
       words_per_sentence.append(words_current_sentence)
       words_current_sentence = 0
@@ -253,7 +263,9 @@ def writing_stats(text):
       percent_passive = voice_per_sentence['passive']/float(sentence_count)
       percent_active = voice_per_sentence['active']/float(sentence_count)
       percent_unsure = voice_per_sentence['unsure']/float(sentence_count)
-      percentages_voice = {'Percent passive' : percent_passive, 'Percent active' : percent_active, 'Percent unsure' : percent_unsure}
+      percentages_voice = {'Percent passive' : percent_passive, \
+                           'Percent active' : percent_active, \
+                           'Percent unsure' : percent_unsure}
 
   new_text = []
   for word in text:
@@ -265,6 +277,49 @@ def writing_stats(text):
   print(tagged_text)
 
   for nxt, word in zip(tagged_text[1:]+['i'], tagged_text):
+      if ((word[0][len(word[0]) - 1] == '.' or word[0][len(word[0])-1]=='?' or  \
+           word[0][len(word[0]) - 1] == '!') and (nxt[0][0].isupper() or nxt[0][0] == '"' or  \
+           nxt[0][0:2] == "@@")):
+          if nxt[1] == "CC":
+              first_word['conjunction'] += 1
+          if nxt[1] == 'WP' or nxt[1] == 'WPS' or nxt[1] == 'PRP' or nxt[1] == 'PRP$':
+              first_word['pronoun'] += 1
+          if nxt[1] == 'NN' or nxt[1] == 'NNS' or nxt[1] == 'NNP' or nxt[1] == 'NNPS':
+              first_word['noun'] += 1
+          if nxt[1] == 'VB' or nxt[1] == 'VBD' or nxt[1] == 'VBG' or nxt[1] == 'VBN' or \
+             nxt[1] == 'VBP' or nxt[1] == 'VBZ':
+              first_word['verb'] += 1
+          if nxt[1] == 'RB' or nxt[1] == 'RBR' or nxt[1] == 'RBS' or nxt[1] == 'WRB':
+              first_word['adverb'] += 1 
+          if nxt[1] == 'IN':
+              first_word['preposition'] += 1
+          if nxt[1] == 'UH':
+              first_word['interjection'] += 1
+          if nxt[1] == 'JJ' or nxt[1] == 'JJR' or nxt[1] == 'JJS':
+              first_word['adjective'] += 1
+          if nxt[1] == 'DT' or nxt[1] == 'WDT' or nxt[1] == 'PDT':
+              first_word['article'] += 1
+      if word == tagged_text[0]:
+          if word[1] == "CC":
+              first_word['conjunction'] += 1
+          if word[1] == 'WP' or word[1] == 'WPS' or word[1] == 'PRP' or word[1] == 'PRP$':
+              first_word['pronoun'] += 1
+          if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
+              first_word['noun'] += 1
+          if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or \
+             word[1] == 'VBP' or word[1] == 'VBZ':
+              first_word['verb'] += 1
+          if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
+              first_word['adverb'] += 1 
+          if word[1] == 'IN':
+              first_word['preposition'] += 1
+          if word[1] == 'UH':
+              first_word['interjection'] += 1
+          if word[1] == 'JJ' or word[1] == 'JJR' or word[1] == 'JJS':
+              first_word['adjective'] += 1
+          if word[1] == 'DT' or word[1] == 'WDT' or word[1] == 'PDT':
+              first_word['article'] += 1
+          
       alpha_word = re.sub("[^a-zA-Z]+", "", word[0])
       alpha_word = alpha_word.lower()
       if word[1] == 'CC':
@@ -273,7 +328,8 @@ def writing_stats(text):
           pronouns.append(alpha_word)
       if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
           nouns.append(alpha_word)
-      if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or word[1] == 'VBP' or word[1] == 'VBZ':
+      if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or \
+         word[1] == 'VBP' or word[1] == 'VBZ':
           verbs.append(alpha_word)
       if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
           adverbs.append(alpha_word)
@@ -327,16 +383,16 @@ def writing_stats(text):
         'End mark frequencies: ' + str(end_marks),'\n',
         'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),'\n',
         'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice), '\n',
-        'Most used nouns: ' + str(top_nouns), '\n',
-        'Most used verbs: ' + str(top_verbs), '\n',
-        'Most used adjectives: ' + str(top_adjectives), '\n',
-        'Most used adverbs: ' + str(top_adjectives), '\n'
-                                  
+        'Most frequent nouns: ' + str(top_nouns), '\n',
+        'Most frequent verbs: ' + str(top_verbs), '\n',
+        'Most frequent adjectives: ' + str(top_adjectives), '\n',
+        'Most frequent adverbs: ' + str(top_adjectives), '\n',
+        'Part of speech of first word in each sentence frequencies: ' + str(first_word), '\n'                                  
        )
 
 
 
-writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\2086Host.docx"))
+writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx"))
 #writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
 
