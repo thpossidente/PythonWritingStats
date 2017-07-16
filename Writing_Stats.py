@@ -5,7 +5,7 @@
 import nltk
 import collections
 import re
-#nltk.download()
+#nltk.download()  #only once
 
 
 
@@ -93,6 +93,12 @@ def writing_stats(text):
 
   print(text)
 
+  test = ['has', 'been']
+  test_tagged = nltk.pos_tag(test)
+  if test[0] == 'has' and test_tagged[1][1] == 'VBN':
+      print('Y')
+    
+        
   for nxt, word in zip(text[1:]+['i'], text):  
     if word != '-' and word!= '&':
       word_count += 1
@@ -119,18 +125,15 @@ def writing_stats(text):
     
     lower = word.lower()
     lower_nxt = nxt.lower()
+    tagged_lower_next = nltk.pos_tag(lower_nxt)
+
     
-    if lower.strip('.') == 'was' or lower.strip('.') == 'were' \
-       or lower.strip('.') == 'be' or lower.strip('.') == 'been':
-      passive_current_sentence += 1
-  
-    if (lower.strip('.') == 'has' and lower_nxt.strip('.') == 'been') or \
-       (lower.strip('.') == 'is' and lower_nxt.strip('.') == 'being') or \
-       (lower.strip('.') == 'have' and lower_nxt.strip('.') == 'been') or \
-       (lower.strip('.') == 'was' and lower_nxt.strip('.') == 'being') or (lower.strip('.') == 'were' \
-        and lower_nxt.strip('.') == 'being') or (lower.strip('.') == 'had' and \
-        lower_nxt.strip('.') == 'been'):
-      passive_current_sentence += 3
+    if (lower == 'was' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'were' and (tagged_lower_next[0][1] == 'VBD'\
+       or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'be' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
+       or (lower == 'been' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'has' and (tagged_lower_next[0][1] == 'VBD'\
+       or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'have' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
+       or (lower == 'is' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')):
+        passive_current_sentence += 3
 
     if (word[len(word) - 1] == '.' and (nxt[0].isupper() or nxt[0] == '"' or \
                                         nxt[0:2] == "@@" or word == text[len(text) - 1])):
@@ -263,9 +266,9 @@ def writing_stats(text):
       percent_passive = voice_per_sentence['passive']/float(sentence_count)
       percent_active = voice_per_sentence['active']/float(sentence_count)
       percent_unsure = voice_per_sentence['unsure']/float(sentence_count)
-      percentages_voice = {'Percent passive' : percent_passive, \
-                           'Percent active' : percent_active, \
-                           'Percent unsure' : percent_unsure}
+      percentages_voice = {'Percent passive' : percent_passive*100, \
+                           'Percent active' : percent_active*100, \
+                           'Percent unsure' : percent_unsure*100}
 
   new_text = []
   for word in text:
@@ -406,10 +409,8 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx"))
   #   paragraph count
 
 
-  #POS counting most frequent in each POS
-  #POS first word in sentence
-  #passive vs active - make better using POS tagging for is/was/were/be/ + past tence as passive
-  #graphs for words_per_sentence and sentences_per_paragraph
+  #passive vs active - make better using POS tagging for is/was/were/be/ + past tense as passive
+  #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS
   
 
 
@@ -417,16 +418,16 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx"))
 
 Number  Tag     Description
 1.	CC	Coordinating conjunction *
-2.	CD	Cardinal number
+2.	CD	Cardinal number - 
 3.	DT	Determiner (articles) *
 4.	EX	Existential there
-5.	FW	Foreign word
+5.	FW	Foreign word - 
 6.	IN	Preposition or subordinating conjunction *
 7.	JJ	Adjective *
 8.	JJR	Adjective, comparative *
 9.	JJS	Adjective, superlative *
-10.	LS	List item marker
-11.	MD	Modal
+10.	LS	List item marker - 
+11.	MD	Modal - 
 12.	NN	Noun, singular or mass *
 13.	NNS	Noun, plural *
 14.	NNP	Proper noun, singular *
