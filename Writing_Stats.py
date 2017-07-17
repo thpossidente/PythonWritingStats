@@ -84,6 +84,7 @@ def writing_stats(text):
   text = text.replace('\n\n', ' @@')
   text = text.replace('\u201c', '"')
   text = text.replace('\u201d', '"')
+  text = text.replace('*', '')
   text = text.split(' ')
   
   for word in text:
@@ -388,7 +389,7 @@ def writing_stats(text):
 
 
 
-writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx")) 
+writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1041Apathy.docx")) 
 #writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
 
@@ -400,9 +401,9 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx"))
   # - Remove Title/cover page/author line/etc. before uploading docx. Extra lines
   #   of this kind will result in inflated paragraph count and deflated average sentences per
   #   paragraph count
+  # - Some symbols make the program not work (ex. *)
 
-
-  # keep trying longer texts, see what makes the elif word.isdigit[1] error (index out of range)
+  #Create error message when string index out of range error
   #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS 
   
 
