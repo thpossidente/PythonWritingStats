@@ -118,11 +118,8 @@ def writing_stats(text):
         letter_count -= 1
     
     lower = word.lower()
-    print(lower)
     lower_nxt = nxt.lower()
-    print(lower_nxt)
     tagged_lower_next = nltk.pos_tag([lower_nxt])
-    print(tagged_lower_next)
     
     if (lower == 'was' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'were' and (tagged_lower_next[0][1] == 'VBD'\
     or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'be' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
@@ -130,7 +127,6 @@ def writing_stats(text):
     or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'have' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
     or (lower == 'is' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')):
         passive_current_sentence += 3
-        print('Y')
 
     if (word[len(word) - 1] == '.' and (nxt[0].isupper() or nxt[0] == '"' or \
     nxt[0:2] == "@@" or word == text[len(text) - 1])):
@@ -392,7 +388,7 @@ def writing_stats(text):
 
 
 
-writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx"))
+writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx")) 
 #writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
 
@@ -406,7 +402,7 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx"))
   #   paragraph count
 
 
-  #passive vs active - make better using POS tagging for is/was/were/be/ + past tense as passive ---------- NOT WORKING - marking everything as active
+  # keep trying longer texts, see what makes the elif word.isdigit[1] error (index out of range)
   #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS 
   
 
