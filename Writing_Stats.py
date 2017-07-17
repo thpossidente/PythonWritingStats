@@ -90,13 +90,7 @@ def writing_stats(text):
       if word == '':
           text.remove(word)
 
-
   print(text)
-
-  test = ['has', 'been']
-  test_tagged = nltk.pos_tag(test)
-  if test[0] == 'has' and test_tagged[1][1] == 'VBN':
-      print('Y')
     
         
   for nxt, word in zip(text[1:]+['i'], text):  
@@ -124,19 +118,22 @@ def writing_stats(text):
         letter_count -= 1
     
     lower = word.lower()
+    print(lower)
     lower_nxt = nxt.lower()
-    tagged_lower_next = nltk.pos_tag(lower_nxt)
-
+    print(lower_nxt)
+    tagged_lower_next = nltk.pos_tag([lower_nxt])
+    print(tagged_lower_next)
     
     if (lower == 'was' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'were' and (tagged_lower_next[0][1] == 'VBD'\
-       or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'be' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
-       or (lower == 'been' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'has' and (tagged_lower_next[0][1] == 'VBD'\
-       or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'have' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
-       or (lower == 'is' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')):
+    or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'be' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
+    or (lower == 'been' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'has' and (tagged_lower_next[0][1] == 'VBD'\
+    or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'have' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
+    or (lower == 'is' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')):
         passive_current_sentence += 3
+        print('Y')
 
     if (word[len(word) - 1] == '.' and (nxt[0].isupper() or nxt[0] == '"' or \
-                                        nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    nxt[0:2] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
       sentences_current_paragraph += 1
       words_per_sentence.append(words_current_sentence)
@@ -166,7 +163,7 @@ def writing_stats(text):
 
     
     if (word[len(word) - 1] == '?' and (nxt[0].isupper() or nxt[0] == '"' or \
-                                        nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    nxt[0:2] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
       words_per_sentence.append(words_current_sentence)
       words_current_sentence = 0
@@ -180,7 +177,7 @@ def writing_stats(text):
       passive_current_sentence = 0
       
     if (word[len(word) - 1] == '!' and (nxt[0].isupper() or nxt[0] == '"'  \
-                                        or nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    or nxt[0:2] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
       words_per_sentence.append(words_current_sentence)
       words_current_sentence = 0
@@ -281,8 +278,8 @@ def writing_stats(text):
 
   for nxt, word in zip(tagged_text[1:]+['i'], tagged_text):
       if ((word[0][len(word[0]) - 1] == '.' or word[0][len(word[0])-1]=='?' or  \
-           word[0][len(word[0]) - 1] == '!') and (nxt[0][0].isupper() or nxt[0][0] == '"' or  \
-           nxt[0][0:2] == "@@")):
+      word[0][len(word[0]) - 1] == '!') and (nxt[0][0].isupper() or nxt[0][0] == '"' or  \
+      nxt[0][0:2] == "@@")):
           if nxt[1] == "CC":
               first_word['conjunction'] += 1
           if nxt[1] == 'WP' or nxt[1] == 'WPS' or nxt[1] == 'PRP' or nxt[1] == 'PRP$':
@@ -290,7 +287,7 @@ def writing_stats(text):
           if nxt[1] == 'NN' or nxt[1] == 'NNS' or nxt[1] == 'NNP' or nxt[1] == 'NNPS':
               first_word['noun'] += 1
           if nxt[1] == 'VB' or nxt[1] == 'VBD' or nxt[1] == 'VBG' or nxt[1] == 'VBN' or \
-             nxt[1] == 'VBP' or nxt[1] == 'VBZ':
+          nxt[1] == 'VBP' or nxt[1] == 'VBZ':
               first_word['verb'] += 1
           if nxt[1] == 'RB' or nxt[1] == 'RBR' or nxt[1] == 'RBS' or nxt[1] == 'WRB':
               first_word['adverb'] += 1 
@@ -310,7 +307,7 @@ def writing_stats(text):
           if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
               first_word['noun'] += 1
           if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or \
-             word[1] == 'VBP' or word[1] == 'VBZ':
+          word[1] == 'VBP' or word[1] == 'VBZ':
               first_word['verb'] += 1
           if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
               first_word['adverb'] += 1 
@@ -332,7 +329,7 @@ def writing_stats(text):
       if word[1] == 'NN' or word[1] == 'NNS' or word[1] == 'NNP' or word[1] == 'NNPS':
           nouns.append(alpha_word)
       if word[1] == 'VB' or word[1] == 'VBD' or word[1] == 'VBG' or word[1] == 'VBN' or \
-         word[1] == 'VBP' or word[1] == 'VBZ':
+      word[1] == 'VBP' or word[1] == 'VBZ':
           verbs.append(alpha_word)
       if word[1] == 'RB' or word[1] == 'RBR' or word[1] == 'RBS' or word[1] == 'WRB':
           adverbs.append(alpha_word)
@@ -376,21 +373,21 @@ def writing_stats(text):
       top_adjectives.append((max(count_adjectives, key=count_adjectives.get), max(count_adjectives.values())))
       del count_adjectives[max(count_adjectives, key=count_adjectives.get)]
   
-  print('\n', 'Paragraph count: ' + str(paragraph_count),'\n',
-        'Word count: ' + str(word_count),'\n',
-        'Letter count: ' + str(letter_count),'\n',
-        'Sentence count: ' + str(sentence_count),'\n',
-        'Average letters per word: ' + str(ave_letters_per_word),'\n',
-        'Average words per sentence: ' + str(ave_words_per_sentence),'\n',
-        'Average sentences per paragraph: ' + str(ave_sentences_per_paragraph),'\n',
-        'End mark frequencies: ' + str(end_marks),'\n',
-        'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),'\n',
-        'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice), '\n',
-        'Most frequent nouns: ' + str(top_nouns), '\n',
-        'Most frequent verbs: ' + str(top_verbs), '\n',
-        'Most frequent adjectives: ' + str(top_adjectives), '\n',
-        'Most frequent adverbs: ' + str(top_adjectives), '\n',
-        'Part of speech of first word in each sentence frequencies: ' + str(first_word), '\n'                                  
+  print('\n', 'Paragraph count: ' + str(paragraph_count),'\n', '\n',
+        'Word count: ' + str(word_count),'\n', '\n',
+        'Letter count: ' + str(letter_count),'\n', '\n',
+        'Sentence count: ' + str(sentence_count),'\n', '\n',
+        'Average letters per word: ' + str(ave_letters_per_word),'\n', '\n',
+        'Average words per sentence: ' + str(ave_words_per_sentence),'\n', '\n',
+        'Average sentences per paragraph: ' + str(ave_sentences_per_paragraph),'\n', '\n',
+        'End mark frequencies: ' + str(end_marks),'\n', '\n',
+        'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),'\n', '\n',
+        'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice), '\n', '\n',
+        'Most frequent nouns: ' + str(top_nouns), '\n', '\n',
+        'Most frequent verbs: ' + str(top_verbs), '\n', '\n',
+        'Most frequent adjectives: ' + str(top_adjectives), '\n', '\n',
+        'Most frequent adverbs: ' + str(top_adjectives), '\n', '\n',
+        'Part of speech of first word in each sentence frequencies: ' + str(first_word), '\n', '\n'                                  
        )
 
 
@@ -409,8 +406,8 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\Test Doc.docx"))
   #   paragraph count
 
 
-  #passive vs active - make better using POS tagging for is/was/were/be/ + past tense as passive
-  #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS
+  #passive vs active - make better using POS tagging for is/was/were/be/ + past tense as passive ---------- NOT WORKING - marking everything as active
+  #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS 
   
 
 
