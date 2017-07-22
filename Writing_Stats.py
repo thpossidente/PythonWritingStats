@@ -5,6 +5,7 @@
 import nltk
 import collections
 import re
+
 #nltk.download()  #only once
 
 
@@ -383,13 +384,13 @@ def writing_stats(text):
         'Most frequent nouns: ' + str(top_nouns), '\n', '\n',
         'Most frequent verbs: ' + str(top_verbs), '\n', '\n',
         'Most frequent adjectives: ' + str(top_adjectives), '\n', '\n',
-        'Most frequent adverbs: ' + str(top_adjectives), '\n', '\n',
+        'Most frequent adverbs: ' + str(top_adverbs), '\n', '\n',
         'Part of speech of first word in each sentence frequencies: ' + str(first_word), '\n', '\n'                                  
        )
 
 
 
-writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1041Apathy.docx")) 
+writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\HemmingwayExcerpt.docx")) 
 #writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
 
@@ -401,7 +402,13 @@ writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1041Apathy.docx"))
   # - Remove Title/cover page/author line/etc. before uploading docx. Extra lines
   #   of this kind will result in inflated paragraph count and deflated average sentences per
   #   paragraph count
-  # - Some symbols make the program not work (ex. *)
+  # - File input can only be docx (Word Document)
+  # - no italics, bold, or underlined text
+
+  # - Some symbols make POS tagging not work (ex. *)
+  #
+  
+  # - Fonts?
 
   #Create error message when string index out of range error
   #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS 
