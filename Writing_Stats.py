@@ -2,13 +2,15 @@
 
 
             ##Helper Functions and Libraries##
+#nltk.download()  #only once
+
+from tkinter import *
 import nltk
 import collections
 import re
 
-#nltk.download()  #only once
 
-
+          
 
 try:          #from http://etienned.github.io/posts/extract-text-from-word-docx-simply/
     from xml.etree.cElementTree import XML
@@ -390,7 +392,7 @@ def writing_stats(text):
 
 
 
-writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\HemmingwayExcerpt.docx")) 
+writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1082CreationMyth.docx")) 
 #writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
 
