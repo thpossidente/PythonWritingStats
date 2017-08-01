@@ -391,26 +391,30 @@ def writing_stats(text):
        )
 
 
-     ### Tkinter UI ###
+     ### Tkinter GUI ###
   
 root = Tk()
 root.title("Writing Statistics")
 
 def retrieve_input():
     InputValue=str(text_input.get("1.0","end-1c"))
+    return(InputValue)
+
+def retrieve_file_path():
+    file_path=str(filepath.get())
+    file_path = file_path.replace('\\', '\\\\')
+    return(writing_stats(get_docx_text(file_path)))
 
 
-
-mainframe = ttk.Frame(root, padding='20 20 20 70')
+mainframe = ttk.Frame(root, padding='20 20 20 30')
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
-text = StringVar()
-
-filepath = ttk.Entry(mainframe, width=35, textvariable=text)
-filepath.grid(column=2, row=1, sticky=W)
+filepath = ttk.Entry(mainframe, width=35)
+filepath.grid(column=2, row=1, sticky=W, padx=(0,20))
 ttk.Label(mainframe, text='Enter File Path to Word document:  ').grid(column=1, row=1, sticky=(W))
+
 
 text_input = Text(mainframe, height=3, width=25)
 text_input.grid(column=2, row=3, sticky=W)
@@ -419,8 +423,10 @@ ttk.Label(mainframe, text='Copy and Paste Text:  ').grid(column=1, row=3, sticky
 
 
 
-button = ttk.Button(mainframe, text='Get Writing Statistics', command=lambda: writing_stats(retrieve_input()))
-button.place(relx=0.5, rely=1.4, anchor=CENTER)
+button = ttk.Button(mainframe, text='Get Writing Statistics from Text Box', command=lambda: writing_stats(retrieve_input()))
+button.grid(row=3, column=3, sticky=(E,W))
+button = ttk.Button(mainframe, text='Get Writing Statistics from File Path', command=lambda: retrieve_file_path())
+button.grid(row=1, column=3, sticky=(E,W))
 
 root.mainloop()
 
