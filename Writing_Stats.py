@@ -373,24 +373,25 @@ def writing_stats(text):
       top_adjectives.append((max(count_adjectives, key=count_adjectives.get), max(count_adjectives.values())))
       del count_adjectives[max(count_adjectives, key=count_adjectives.get)]
   
-  print('\n', 'Paragraph count: ' + str(paragraph_count),'\n', '\n',
-        'Word count: ' + str(word_count),'\n', '\n',
-        'Letter count: ' + str(letter_count),'\n', '\n',
-        'Sentence count: ' + str(sentence_count),'\n', '\n',
-        'Average letters per word: ' + str(ave_letters_per_word),'\n', '\n',
-        'Average words per sentence: ' + str(ave_words_per_sentence),'\n', '\n',
-        'Average sentences per paragraph: ' + str(ave_sentences_per_paragraph),'\n', '\n',
-        'End mark frequencies: ' + str(end_marks),'\n', '\n',
-        'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),'\n', '\n',
-        'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice), '\n', '\n',
-        'Most frequent nouns: ' + str(top_nouns), '\n', '\n',
-        'Most frequent verbs: ' + str(top_verbs), '\n', '\n',
-        'Most frequent adjectives: ' + str(top_adjectives), '\n', '\n',
-        'Most frequent adverbs: ' + str(top_adverbs), '\n', '\n',
-        'Part of speech of first word in each sentence frequencies: ' + str(first_word), '\n', '\n'                                  
-       )
+  prnt = ('\n', 'Paragraph count: ' + str(paragraph_count) + \
+  'Word count: ' + str(word_count),'\n', '\n',
+  'Letter count: ' + str(letter_count),'\n', '\n',
+  'Sentence count: ' + str(sentence_count),'\n', '\n',
+  'Average letters per word: ' + str(ave_letters_per_word),'\n', '\n',
+  'Average words per sentence: ' + str(ave_words_per_sentence),'\n', '\n',
+  'Average sentences per paragraph: ' + str(ave_sentences_per_paragraph),'\n', '\n',
+  'End mark frequencies: ' + str(end_marks),'\n', '\n',
+  'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),'\n', '\n',
+  'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice), '\n', '\n',
+  'Most frequent nouns: ' + str(top_nouns), '\n', '\n',
+  'Most frequent verbs: ' + str(top_verbs), '\n', '\n',
+  'Most frequent adjectives: ' + str(top_adjectives), '\n', '\n',
+  'Most frequent adverbs: ' + str(top_adverbs), '\n', '\n',
+  'Part of speech of first word in each sentence frequencies: ' + str(first_word), '\n', '\n')
 
+  return prnt
 
+               
      ### Tkinter GUI ###
   
 root = Tk()
@@ -398,13 +399,18 @@ root.title("Writing Statistics")
 
 def retrieve_input():
     InputValue=str(text_input.get("1.0","end-1c"))
-    return(InputValue)
+    window = Toplevel(root)
+    window.title('Writing Statistics')
+    message = Message(window, text=str(writing_stats(InputValue)), width = 500)
+    message.pack()
 
 def retrieve_file_path():
     file_path=str(filepath.get())
-    file_path = file_path.replace('\\', '\\\\')
-    return(writing_stats(get_docx_text(file_path)))
-
+    window = Toplevel(root)
+    window.title('Writing Statistics')
+    message = Message(window, text=str(writing_stats(get_docx_text(file_path))))
+    message.pack()
+    
 
 mainframe = ttk.Frame(root, padding='20 20 20 30')
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
@@ -415,15 +421,12 @@ filepath = ttk.Entry(mainframe, width=35)
 filepath.grid(column=2, row=1, sticky=W, padx=(0,20))
 ttk.Label(mainframe, text='Enter File Path to Word document:  ').grid(column=1, row=1, sticky=(W))
 
-
 text_input = Text(mainframe, height=3, width=25)
 text_input.grid(column=2, row=3, sticky=W)
 ttk.Label(mainframe, text='or').grid(column=2, row=2, sticky=(W,E), pady=(10,10))
 ttk.Label(mainframe, text='Copy and Paste Text:  ').grid(column=1, row=3, sticky=E)
 
-
-
-button = ttk.Button(mainframe, text='Get Writing Statistics from Text Box', command=lambda: writing_stats(retrieve_input()))
+button = ttk.Button(mainframe, text='Get Writing Statistics from Text Box', command=lambda: retrieve_input())
 button.grid(row=3, column=3, sticky=(E,W))
 button = ttk.Button(mainframe, text='Get Writing Statistics from File Path', command=lambda: retrieve_file_path())
 button.grid(row=1, column=3, sticky=(E,W))
@@ -431,11 +434,7 @@ button.grid(row=1, column=3, sticky=(E,W))
 root.mainloop()
 
 
-#writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1082CreationMyth.docx")) 
-#writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
-
-#writing_stats(str(text))
-
+# C:\Users\Tom\Downloads\1082CreationMyth.docx
         ##Notes##
 
 
