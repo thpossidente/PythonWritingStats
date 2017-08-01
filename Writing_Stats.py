@@ -396,19 +396,31 @@ def writing_stats(text):
 root = Tk()
 root.title("Writing Statistics")
 
-mainframe = ttk.Frame(root, padding='20 20 20 40')
+def retrieve_input():
+    InputValue=str(text_input.get("1.0","end-1c"))
+
+
+
+mainframe = ttk.Frame(root, padding='20 20 20 70')
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
 text = StringVar()
 
-filepath = ttk.Entry(mainframe, width=25, textvariable=text)
+filepath = ttk.Entry(mainframe, width=35, textvariable=text)
 filepath.grid(column=2, row=1, sticky=W)
 ttk.Label(mainframe, text='Enter File Path to Word document:  ').grid(column=1, row=1, sticky=(W))
 
-button = ttk.Button(mainframe, text='Get Writing Statistics', command=writing_stats)
-button.place(relx=0.5, rely=2, anchor=CENTER)
+text_input = Text(mainframe, height=3, width=25)
+text_input.grid(column=2, row=3, sticky=W)
+ttk.Label(mainframe, text='or').grid(column=2, row=2, sticky=(W,E), pady=(10,10))
+ttk.Label(mainframe, text='Copy and Paste Text:  ').grid(column=1, row=3, sticky=E)
+
+
+
+button = ttk.Button(mainframe, text='Get Writing Statistics', command=lambda: writing_stats(retrieve_input()))
+button.place(relx=0.5, rely=1.4, anchor=CENTER)
 
 root.mainloop()
 
@@ -416,7 +428,7 @@ root.mainloop()
 #writing_stats(get_docx_text("C:\\Users\\Tom\\Downloads\\1082CreationMyth.docx")) 
 #writing_stats(text)   Use if no word doc input and you want to be prompted to enter text (comment out line above)
 
-writing_stats(str(text))
+#writing_stats(str(text))
 
         ##Notes##
 
