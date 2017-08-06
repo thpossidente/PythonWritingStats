@@ -85,6 +85,9 @@ def writing_stats(text):
   passive_current_sentence = 0
 
   text = text.replace('\n\n', ' @@')
+  text = text.replace('\n\t', ' @@')
+  text = text.replace('\t', ' @@')
+  text = text.replace('\n', ' @@')
   text = text.replace('\u201c', '"')
   text = text.replace('\u201d', '"')
   text = text.replace('*', '')
@@ -101,13 +104,6 @@ def writing_stats(text):
     if word != '-' and word!= '&':
       word_count += 1
       words_current_sentence += 1
-
-    if "@@" in word:
-      paragraph_count += 1
-      sentences_per_paragraph.append(sentences_current_paragraph)
-      sentences_current_paragraph = 0
-      letter_count -= 2
-      letters_current_word -= 2
 
     if nxt == 'i':
       paragraph_count += 1
@@ -193,7 +189,35 @@ def writing_stats(text):
       
     if len(word) > 3 and '...' in word: 
       other_punctuation['ellipses'] += 1
-      
+
+    if "@@" in word and word != '@@':
+        paragraph_count += 1
+        sentences_per_paragraph.append(sentences_current_paragraph)
+        sentences_current_paragraph = 0
+        letter_count -= 2
+        letters_current_word -= 2
+
+    if word == '@@':
+        paragraph_count += 1
+        sentences_per_paragraph.append(sentences_current_paragraph)
+        sentences_current_paragraph = 0
+        letter_count -= 2
+        letters_current_word -= 2
+        text.remove(word)
+        sentence_count += 1
+        sentences_current_paragraph += 1
+        words_per_sentence.append(words_current_sentence)
+        words_current_sentence = 1
+        end_marks['period'] += 1
+        if passive_current_sentence > 2:
+          voice_per_sentence['passive'] += 1
+        if passive_current_sentence < 2:
+          voice_per_sentence['active'] += 1
+        if passive_current_sentence == 2:
+          voice_per_sentence['unsure'] += 1
+        passive_current_sentence = 0
+        
+    
     for letter in word:
       letter_count += 1
       letters_current_word += 1
@@ -240,6 +264,8 @@ def writing_stats(text):
           other_punctuation['period'] += 1
           letter_count -= 1
           letters_current_word -= 1
+
+
         
     lst_letters = list(enumerate(word))
     for letter in lst_letters:
@@ -247,6 +273,7 @@ def writing_stats(text):
         letters_per_word.append(letters_current_word)
         letters_current_word = 0
 
+      
 
   
   other_punctuation['period'] = other_punctuation['period'] - end_marks['period'] - (3 * other_punctuation['ellipses'])
@@ -401,18 +428,15 @@ def retrieve_input():
     InputValue=str(text_input.get("1.0","end-1c"))
     window = Toplevel(root)
     window.title('Writing Statistics')
-    label = ttk.Label(window, wraplength=450, anchor=CENTER, text=str(writing_stats(InputValue)), width = 100)
+    label = ttk.Label(window, wraplength=450, anchor=CENTER, text=str(writing_stats(InputV0alue)), width = 100)
     label.pack()
     
 def retrieve_file_path():
     file_path=str(filepath.get())
     window = Toplevel(root)
     window.title('Writing Statistics')
-    label = ttk.Label(window, text=str(writing_stats(get_docx_text(file_path))))
-    label.pack()
-
-
-    
+    label = ttk.Label(window, wraplength=450, anchor=CENTER, text=str(writing_stats(get_docx_text(file_path)), width=100))
+    label.pack()  
     
 
 mainframe = ttk.Frame(root, padding='20 20 20 30')
@@ -420,17 +444,17 @@ mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 mainframe.columnconfigure(0, weight=1)
 mainframe.rowconfigure(0, weight=1)
 
-filepath = ttk.Entry(mainframe, width=32)
-filepath.grid(column=2, row=1, sticky=W)
-ttk.Label(mainframe, text='Enter File Path to Word document:  ').grid(column=1, row=1, sticky=E)
+filepath = ttk.Entry(mainframe, width=100)
+filepath.grid(column=2, row=7, sticky=W)
+ttk.Label(mainframe, text='Enter File Path to Word document:  ').grid(column=1, row=7, sticky=E, padx=(100,0))
 
 scrollbar = Scrollbar(mainframe)
-scrollbar.grid(column=3, row=3, sticky=E)
-text_input = Text(mainframe, height=3, width=25, wrap=WORD, yscrollcommand=scrollbar.set)
-text_input.grid(column=2, row=3, sticky=E)
+scrollbar.grid(column=3, row=9, sticky=E)
+text_input = Text(mainframe, height=6, width=75, wrap=WORD, yscrollcommand=scrollbar.set)
+text_input.grid(column=2, row=9, sticky=W)
 scrollbar.config(command=text_input.yview)
-ttk.Label(mainframe, text='or').grid(column=2, row=2, sticky=W, pady=(10,10))
-ttk.Label(mainframe, text='Copy and Paste Text:  ').grid(column=1, row=3, sticky=E)
+ttk.Label(mainframe, text='or').grid(column=2, row=8, pady=(10,10))
+ttk.Label(mainframe, text='Copy and Paste Text:  ').grid(column=1, row=9, sticky=E)
 
 #pb = ttk.Progressbar(mainframe, orient='horizontal', mode='indeterminate')
 #pb.grid(column=2, row=4, pady=(20,0))
@@ -438,9 +462,17 @@ ttk.Label(mainframe, text='Copy and Paste Text:  ').grid(column=1, row=3, sticky
 #pb.stop()
     
 button = ttk.Button(mainframe, text='Get Writing Statistics from Text Box', command=lambda: retrieve_input())
-button.grid(row=3, column=4, sticky=(E), padx=(10,0))
+button.grid(row=9, column=4, sticky=(E), padx=(10,0))
 button = ttk.Button(mainframe, text='Get Writing Statistics from File Path', command=lambda: retrieve_file_path())
-button.grid(row=1, column=4, sticky=(E), padx=(10,0))
+button.grid(row=7, column=4, sticky=(E), padx=(10,0))
+
+ttk.Label(mainframe, wraplength=450, anchor=CENTER, text='Guidlines for best writing statistics results:', width=100).grid(column=2, row=1, pady=(0,10))
+ttk.Label(mainframe, wraplength=450, anchor=CENTER, text='- Only file paths ending with .docx (Word documents) can be analyzed. To get a documents file path, right click the file and select "properties" and copy-paste the file path. Make sure to add the file name and extension ".docx" to the end of the file path if it is not already there.', width=100).grid(column=2, row=2, pady=(0,10))
+ttk.Label(mainframe, wraplength=450, anchor=CENTER, text='- Any text outside of a paragraph (title, authorship line, etc.) will be counted as its own paragraph and sentence. Remove these lines of text if you do not wish for them to be counted as such.',width=100).grid(column=2, row=3, pady=(0,10))
+ttk.Label(mainframe, wraplength=450, anchor=CENTER, text='- Remove blank lines of text if you do not wish them to be counted as paragraphs', width=100).grid(column=2, row=4, pady=(0,10))
+ttk.Label(mainframe, wraplength=450, anchor=CENTER, text='- Footnotes will be read only if converted to regular text and put at the end of the document/text', width=100).grid(column=2, row=5, pady=(0,10))
+ttk.Label(mainframe, wraplength=450, anchor=CENTER, text='- For text that is copied/pasted, remove any extra spaces at the end of the text or else they will be counted as extra paragraphs', width=100).grid(column=2, row=6, pady=(0,100))
+
 
 root.mainloop()
 
@@ -449,16 +481,15 @@ root.mainloop()
 
 
   # - does not 'read' footnotes - convert to regular text at end of docx before uploading file
-  # - Remove Title/cover page/author line/etc. before uploading docx. Extra lines
+  # - Remove Title/cover page/author line/etc. before uploading docx. Extra lines. Title will be read as paragraph and a sentence
   #   of this kind will result in inflated paragraph count and deflated average sentences per
   #   paragraph count
   # - File input can only be docx (Word Document)
-  # - no italics, bold, or underlined text
+  # - For copy and paste text, if there is a space at the end of the text, the program will read it as an extra paragraph
+ 
 
   # - Some symbols make POS tagging not work (ex. *)
-  #
-  
-  # - Fonts?
+
 
   #Create error message when string index out of range error
   #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS 
