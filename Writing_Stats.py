@@ -56,7 +56,6 @@ def get_docx_text(path):
 
             ##Writing Stats Main Function##
 
-# text = input('Enter text: ')  Use only in absence of word file input
 def writing_stats(text):
   word_count = 0
   letter_count = 0
@@ -428,15 +427,17 @@ def retrieve_input():
     InputValue=str(text_input.get("1.0","end-1c"))
     window = Toplevel(root)
     window.title('Writing Statistics')
-    label = ttk.Label(window, wraplength=450, anchor=CENTER, text=str(writing_stats(InputV0alue)), width = 100)
-    label.pack()
+    retrn = writing_stats(InputValue)
+    for i in range(0, 14):
+        ttk.Label(window, wraplength=450, anchor=CENTER, text=str(retrn[i]), width = 100).pack()
     
 def retrieve_file_path():
     file_path=str(filepath.get())
     window = Toplevel(root)
     window.title('Writing Statistics')
-    label = ttk.Label(window, wraplength=450, anchor=CENTER, text=str(writing_stats(get_docx_text(file_path)), width=100))
-    label.pack()  
+    retrn = writing_stats(get_docx_text(file_path))
+    for i in range(0, 14):
+        ttk.Label(window, wraplength=450, anchor=CENTER, text=str(retrn[i]), width = 100).pack()
     
 
 mainframe = ttk.Frame(root, padding='20 20 20 30')
@@ -476,7 +477,8 @@ ttk.Label(mainframe, wraplength=450, anchor=CENTER, text='- For text that is cop
 
 root.mainloop()
 
-# C:\Users\Tom\Downloads\1082CreationMyth.docx
+
+
         ##Notes##
 
 
