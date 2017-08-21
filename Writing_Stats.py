@@ -57,6 +57,16 @@ def get_docx_text(path):
             ##Writing Stats Main Function##
 
 def writing_stats(text):
+
+  pb = ttk.Progressbar(orient='horizontal', mode='determinate', length=100)
+  pb.grid(row=11, pady=(20, 20))
+
+  pb['value'] = 10
+  root.update_idletasks()
+
+  counter = 0
+  counter1 = 0
+  counter2 = 0
   word_count = 0
   letter_count = 0
   letters_per_word = []
@@ -91,22 +101,17 @@ def writing_stats(text):
   text = text.replace('\u201d', '"')
   text = text.replace('*', '')
   text = text.split(' ')
-  
-  for word in text:
-      if word == '':
-          text.remove(word)
+  text = list(filter(None, text))
 
   print(text)
-    
+  
+  pb['value']=20
+  root.update_idletasks()
         
   for nxt, word in zip(text[1:]+['i'], text):  
     if word != '-' and word!= '&':
       word_count += 1
       words_current_sentence += 1
-
-    if nxt == 'i':
-      paragraph_count += 1
-      sentences_per_paragraph.append(sentences_current_paragraph)
     
     if word == '-':
       other_punctuation['dash'] += 1
@@ -115,10 +120,20 @@ def writing_stats(text):
     if word == '&':
         other_punctuation['ampersand'] += 1
         letter_count -= 1
+
+    if counter == 0:
+      pb['value'] = 30
+      root.update_idletasks()
+      counter += 1
     
     lower = word.lower()
     lower_nxt = nxt.lower()
-    tagged_lower_next = nltk.pos_tag([lower_nxt])
+    while True:
+        try:
+            tagged_lower_next = nltk.pos_tag([lower_nxt])
+            break
+        except IndexError:
+            tagged_lower_next = 'I'
     
     if (lower == 'was' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'were' and (tagged_lower_next[0][1] == 'VBD'\
     or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')) or (lower == 'be' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN'))\
@@ -127,8 +142,9 @@ def writing_stats(text):
     or (lower == 'is' and (tagged_lower_next[0][1] == 'VBD' or tagged_lower_next[0][1] == 'VBG' or tagged_lower_next[0][1] == 'VBN')):
         passive_current_sentence += 3
 
-    if (word[len(word) - 1] == '.' and (nxt[0].isupper() or nxt[0] == '"' or \
-    nxt[0:2] == "@@" or word == text[len(text) - 1])):
+
+    if ((word[len(word) - 1] == '.' or word[len(word) - 2] == '.') and (nxt[0].isupper() or nxt[0] == '"' or \
+    nxt[0] == "@" or word == text[len(text) - 1])):
       sentence_count += 1
       sentences_current_paragraph += 1
       words_per_sentence.append(words_current_sentence)
@@ -157,9 +173,39 @@ def writing_stats(text):
       passive_current_sentence = 0
 
     
-    if (word[len(word) - 1] == '?' and (nxt[0].isupper() or nxt[0] == '"' or \
-    nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    if '?@@' in word:
       sentence_count += 1
+      sentences_current_paragraph += 1
+      words_per_sentence.append(words_current_sentence)
+      words_current_sentence = 1
+      end_marks['question mark'] += 1
+      if passive_current_sentence > 2:
+        voice_per_sentence['passive'] += 1
+      if passive_current_sentence < 2:
+        voice_per_sentence['active'] += 1
+      if passive_current_sentence == 2:
+        voice_per_sentence['unsure'] += 1
+      passive_current_sentence = 0
+
+    if '!@@' in word:
+      sentence_count += 1
+      sentences_current_paragraph += 1
+      words_per_sentence.append(words_current_sentence)
+      words_current_sentence = 1
+      end_marks['exclamation point'] += 1
+      if passive_current_sentence > 2:
+        voice_per_sentence['passive'] += 1
+      if passive_current_sentence < 2:
+        voice_per_sentence['active'] += 1
+      if passive_current_sentence == 2:
+        voice_per_sentence['unsure'] += 1
+      passive_current_sentence = 0
+
+
+    if ((word[len(word) - 1] == '?' or word[len(word) - 2] == '?') and (nxt[0].isupper() or nxt[0] == '"' or \
+    nxt[0:1] == "@@" or word == text[len(text) - 1])):
+      sentence_count += 1
+      sentences_current_paragraph += 1
       words_per_sentence.append(words_current_sentence)
       words_current_sentence = 0
       end_marks['question mark'] += 1
@@ -171,9 +217,10 @@ def writing_stats(text):
         voice_per_sentence['unsure'] += 1
       passive_current_sentence = 0
       
-    if (word[len(word) - 1] == '!' and (nxt[0].isupper() or nxt[0] == '"'  \
-    or nxt[0:2] == "@@" or word == text[len(text) - 1])):
+    if ((word[len(word) - 1] == '!' or word[len(word) - 2] == '!') and (nxt[0].isupper() or nxt[0] == '"'  \
+    or nxt[0:1] == "@@" or word == text[len(text) - 1])):
       sentence_count += 1
+      sentences_current_paragraph += 1
       words_per_sentence.append(words_current_sentence)
       words_current_sentence = 0
       end_marks['exclamation point'] += 1
@@ -189,7 +236,7 @@ def writing_stats(text):
     if len(word) > 3 and '...' in word: 
       other_punctuation['ellipses'] += 1
 
-    if "@@" in word and word != '@@':
+    if "@@" in word and word != '@@' and word != text[0]:
         paragraph_count += 1
         sentences_per_paragraph.append(sentences_current_paragraph)
         sentences_current_paragraph = 0
@@ -215,7 +262,17 @@ def writing_stats(text):
         if passive_current_sentence == 2:
           voice_per_sentence['unsure'] += 1
         passive_current_sentence = 0
-        
+
+    if counter1 == 0:
+      pb['value'] = 40
+      root.update_idletasks()
+      counter1 += 1
+
+    if nxt == 'i':
+      paragraph_count += 1
+      sentences_per_paragraph.append(sentences_current_paragraph)
+      sentences_current_paragraph = 0
+
     
     for letter in word:
       letter_count += 1
@@ -264,15 +321,19 @@ def writing_stats(text):
           letter_count -= 1
           letters_current_word -= 1
 
-
-        
+    if counter2 == 0:
+      pb['value'] = 50
+      root.update_idletasks()
+      counter2 += 1
+    
     lst_letters = list(enumerate(word))
     for letter in lst_letters:
       if letter == lst_letters[len(lst_letters)-1]:
         letters_per_word.append(letters_current_word)
         letters_current_word = 0
 
-      
+  pb['value'] = 70
+  root.update_idletasks()
 
   
   other_punctuation['period'] = other_punctuation['period'] - end_marks['period'] - (3 * other_punctuation['ellipses'])
@@ -294,13 +355,24 @@ def writing_stats(text):
                            'Percent unsure' : percent_unsure*100}
 
   new_text = []
+  notword = 'i'
   for word in text:
     word = word.replace('@@', '')
+    if word == '':
+        word == notword
     new_text.append(word)
 
-          
-  tagged_text = nltk.pos_tag(new_text)
+  while True:
+      try:
+          tagged_text = nltk.pos_tag(new_text)
+          break
+      except IndexError:
+          pass
   print(tagged_text)
+
+  pb['value'] = 75
+  root.update_idletasks()
+
 
   for nxt, word in zip(tagged_text[1:]+['i'], tagged_text):
       if ((word[0][len(word[0]) - 1] == '.' or word[0][len(word[0])-1]=='?' or  \
@@ -399,8 +471,11 @@ def writing_stats(text):
       top_adjectives.append((max(count_adjectives, key=count_adjectives.get), max(count_adjectives.values())))
       del count_adjectives[max(count_adjectives, key=count_adjectives.get)]
 
+  pb['value'] = 100
+  root.update_idletasks()
 
-
+  
+   
   return  ('Paragraph count: ' + str(paragraph_count),
   'Word count: ' + str(word_count),
   'Letter count: ' + str(letter_count),
@@ -421,7 +496,6 @@ def writing_stats(text):
   
 root = Tk()
 root.title("Writing Statistics")
-
 
 def retrieve_input():
     InputValue=str(text_input.get("1.0","end-1c"))
@@ -457,11 +531,6 @@ scrollbar.config(command=text_input.yview)
 ttk.Label(mainframe, text='or').grid(column=2, row=8, pady=(10,10))
 ttk.Label(mainframe, text='Copy and Paste Text:  ').grid(column=1, row=9, sticky=E)
 
-#pb = ttk.Progressbar(mainframe, orient='horizontal', mode='indeterminate')
-#pb.grid(column=2, row=4, pady=(20,0))
-#pb.start()
-#pb.stop()
-    
 button = ttk.Button(mainframe, text='Get Writing Statistics from Text Box', command=lambda: retrieve_input())
 button.grid(row=9, column=4, sticky=(E), padx=(10,0))
 button = ttk.Button(mainframe, text='Get Writing Statistics from File Path', command=lambda: retrieve_file_path())
