@@ -87,7 +87,9 @@ def writing_stats(text):
   adjectives = []
   articles = []
   first_word = {'pronoun' : 0, 'noun' : 0, 'verb' : 0, 'adverb' : 0, 'conjunction' : 0, 'preposition' : 0, 'interjection' : 0, 'adjective' : 0, 'article' : 0}
+  first_word_new = {'pronoun' : 0, 'noun' : 0, 'verb' : 0, 'adverb' : 0, 'conjunction' : 0, 'preposition' : 0, 'interjection' : 0, 'adjective' : 0, 'article' : 0}
   end_marks = {'period' : 0, 'exclamation point' : 0, 'question mark' : 0}
+  end_marks_new = {'period' : 0, 'exclamation point' : 0, 'question mark' : 0}
   other_punctuation = {'comma' : 0, 'semicolon' : 0, 'colon' : 0, 'ampersand' : 0, 'hyphen' : 0, \
                        'exclamation point' : 0, 'period' : 0, 'dash' : 0, 'question mark' : 0, 'parenthesis' : 0, 'quotation mark' : 0, 'ellipses' : 0, 'forward slash' : 0, 'period' : 0}
   voice_per_sentence = {'passive' : 0, 'active' : 0, 'unsure': 0}
@@ -358,11 +360,11 @@ def writing_stats(text):
   punctuation_per_sentence = round((sum(end_marks.values()) + sum(other_punctuation.values())) / sentence_count, 2)
 
   if end_marks['period'] > 0:
-      end_marks['period'] = round((end_marks['period'] / sentence_count) * 100, 2)
+      end_marks_new['period'] = round((end_marks['period'] / sentence_count) * 100, 2)
   if end_marks['question mark'] > 0:
-      end_marks['question mark'] = round((end_marks['question mark'] / sentence_count) * 100, 2)
+      end_marks_new['question mark'] = round((end_marks['question mark'] / sentence_count) * 100, 2)
   if end_marks['exclamation point'] > 0:
-      end_marks['exclamation point'] = round((end_marks['exclamation point'] / sentence_count) * 100, 2)
+      end_marks_new['exclamation point'] = round((end_marks['exclamation point'] / sentence_count) * 100, 2)
       
   new_text = []
   notword = 'i'
@@ -451,23 +453,23 @@ def writing_stats(text):
           articles.append(alpha_word)
   
   if first_word['pronoun'] > 0:
-      first_word['pronoun'] = round((first_word['pronoun'] / sum(first_word.values())) * 100, 2)
+      first_word_new['pronoun'] = round(((first_word['pronoun'] / sum(first_word.values())) * 100), 2)
   if first_word['noun'] > 0:
-      first_word['noun'] = round((first_word['noun'] / sum(first_word.values())) * 100, 2)
+      first_word_new['noun'] = round(((first_word['noun'] / sum(first_word.values())) * 100), 2)
   if first_word['verb'] > 0:
-      first_word['verb'] = round((first_word['verb'] / sum(first_word.values())) * 100, 2)
+      first_word_new['verb'] = round(((first_word['verb'] / sum(first_word.values())) * 100), 2)
   if first_word['adverb'] > 0:
-      first_word['adverb'] = round((first_word['adverb'] / sum(first_word.values())) * 100, 2)
+      first_word_new['adverb'] = round(((first_word['adverb'] / sum(first_word.values())) * 100), 2)
   if first_word['conjunction'] > 0:
-      first_word['conjunction'] = round((first_word['conjunction'] / sum(first_word.values())) * 100, 2)
+      first_word_new['conjunction'] = round(((first_word['conjunction'] / sum(first_word.values())) * 100), 2)
   if first_word['preposition'] > 0:
-      first_word['preposition'] = round((first_word['preposition'] / sum(first_word.values())) * 100, 2)
+      first_word_new['preposition'] = round(((first_word['preposition'] / sum(first_word.values())) * 100), 2)
   if first_word['interjection'] > 0:
-      first_word['interjection'] = round((first_word['interjection'] / sum(first_word.values())) * 100, 2)
+      first_word_new['interjection'] = round(((first_word['interjection'] / sum(first_word.values())) * 100), 2)
   if first_word['adjective'] > 0:
-      first_word['adjective'] = round((first_word['adjective'] / sum(first_word.values())) * 100, 2)
+      first_word_new['adjective'] = round(((first_word['adjective'] / sum(first_word.values())) * 100), 2)
   if first_word['article'] > 0:
-      first_word['article'] = round((first_word['article'] / sum(first_word.values())) * 100, 2)
+      first_word_new['article'] = round(((first_word['article'] / sum(first_word.values())) * 100), 2)
       
   count_nouns = collections.Counter(nouns)
   count_nouns.update({' ' : 0, '  ' : 0, '   ' : 0, '    ' : 0, '     ' : 0})
@@ -503,8 +505,7 @@ def writing_stats(text):
   for i in range(0,(len(words_per_sentence) - 1)):
       diff.append(abs(words_per_sentence[i] - words_per_sentence[i+1]))
   ave_diff = round(sum(diff)/len(diff), 2)
-  print(diff)
-
+  
   pb['value'] = 100
   root.update_idletasks()
 
@@ -517,14 +518,14 @@ def writing_stats(text):
   'Average letters per word: ' + str(ave_letters_per_word),
   'Average words per sentence: ' + str(ave_words_per_sentence),
   'Average sentences per paragraph: ' + str(ave_sentences_per_paragraph),
-  'End mark percentages: ' + str(end_marks),
+  'End mark percentages: ' + str(end_marks_new),
   'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),
   'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice),
   'Most frequent nouns: ' + str(top_nouns),
   'Most frequent verbs: ' + str(top_verbs),
   'Most frequent adjectives: ' + str(top_adjectives),
   'Most frequent adverbs: ' + str(top_adverbs),
-  'Part of speech of first word in each sentence percentages: ' + str(first_word),
+  'Part of speech of first word in each sentence percentages: ' + str(first_word_new),
   'Average punctuation marks per sentence (end marks included): ' + str(punctuation_per_sentence),
   'Average change in words per sentence from sentence to sentence: ' + str(ave_diff))
   
