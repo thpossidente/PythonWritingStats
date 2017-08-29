@@ -341,19 +341,29 @@ def writing_stats(text):
   other_punctuation['exclamation point'] = other_punctuation['exclamation point'] - end_marks['exclamation point']  
 
   if len(words_per_sentence) > 0:
-      ave_words_per_sentence = sum(words_per_sentence)/float(len(words_per_sentence))
-      ave_letters_per_word = sum(letters_per_word)/float(len(letters_per_word))
+      ave_words_per_sentence = round(sum(words_per_sentence)/float(len(words_per_sentence)), 2)
+      ave_letters_per_word = round(sum(letters_per_word)/float(len(letters_per_word)), 2)
   if len(sentences_per_paragraph) > 0:
-      ave_sentences_per_paragraph = sum(sentences_per_paragraph)/float(len(sentences_per_paragraph))
+      ave_sentences_per_paragraph = round(sum(sentences_per_paragraph)/float(len(sentences_per_paragraph)), 2)
 
   if sentence_count > 0:
       percent_passive = voice_per_sentence['passive']/float(sentence_count)
       percent_active = voice_per_sentence['active']/float(sentence_count)
       percent_unsure = voice_per_sentence['unsure']/float(sentence_count)
-      percentages_voice = {'Percent passive' : percent_passive*100, \
-                           'Percent active' : percent_active*100, \
-                           'Percent unsure' : percent_unsure*100}
+      percentages_voice = {'Percent passive' : round(percent_passive*100, 2), \
+                           'Percent active' : round(percent_active*100, 2), \
+                           'Percent unsure' : round(percent_unsure*100, 2)}
 
+
+  punctuation_per_sentence = round((sum(end_marks.values()) + sum(other_punctuation.values())) / sentence_count, 2)
+
+  if end_marks['period'] > 0:
+      end_marks['period'] = round((end_marks['period'] / sentence_count) * 100, 2)
+  if end_marks['question mark'] > 0:
+      end_marks['question mark'] = round((end_marks['question mark'] / sentence_count) * 100, 2)
+  if end_marks['exclamation point'] > 0:
+      end_marks['exclamation point'] = round((end_marks['exclamation point'] / sentence_count) * 100, 2)
+      
   new_text = []
   notword = 'i'
   for word in text:
@@ -440,7 +450,25 @@ def writing_stats(text):
       if word[1] == 'DT' or word[1] == 'WDT' or word[1] == 'PDT':
           articles.append(alpha_word)
   
-  
+  if first_word['pronoun'] > 0:
+      first_word['pronoun'] = round((first_word['pronoun'] / sum(first_word.values())) * 100, 2)
+  if first_word['noun'] > 0:
+      first_word['noun'] = round((first_word['noun'] / sum(first_word.values())) * 100, 2)
+  if first_word['verb'] > 0:
+      first_word['verb'] = round((first_word['verb'] / sum(first_word.values())) * 100, 2)
+  if first_word['adverb'] > 0:
+      first_word['adverb'] = round((first_word['adverb'] / sum(first_word.values())) * 100, 2)
+  if first_word['conjunction'] > 0:
+      first_word['conjunction'] = round((first_word['conjunction'] / sum(first_word.values())) * 100, 2)
+  if first_word['preposition'] > 0:
+      first_word['preposition'] = round((first_word['preposition'] / sum(first_word.values())) * 100, 2)
+  if first_word['interjection'] > 0:
+      first_word['interjection'] = round((first_word['interjection'] / sum(first_word.values())) * 100, 2)
+  if first_word['adjective'] > 0:
+      first_word['adjective'] = round((first_word['adjective'] / sum(first_word.values())) * 100, 2)
+  if first_word['article'] > 0:
+      first_word['article'] = round((first_word['article'] / sum(first_word.values())) * 100, 2)
+      
   count_nouns = collections.Counter(nouns)
   count_nouns.update({' ' : 0, '  ' : 0, '   ' : 0, '    ' : 0, '     ' : 0})
   top_nouns = []
@@ -471,10 +499,16 @@ def writing_stats(text):
       top_adjectives.append((max(count_adjectives, key=count_adjectives.get), max(count_adjectives.values())))
       del count_adjectives[max(count_adjectives, key=count_adjectives.get)]
 
+  diff = []
+  for i in range(0,(len(words_per_sentence) - 1)):
+      diff.append(abs(words_per_sentence[i] - words_per_sentence[i+1]))
+  ave_diff = round(sum(diff)/len(diff), 2)
+  print(diff)
+
   pb['value'] = 100
   root.update_idletasks()
 
-  
+    
    
   return  ('Paragraph count: ' + str(paragraph_count),
   'Word count: ' + str(word_count),
@@ -483,14 +517,17 @@ def writing_stats(text):
   'Average letters per word: ' + str(ave_letters_per_word),
   'Average words per sentence: ' + str(ave_words_per_sentence),
   'Average sentences per paragraph: ' + str(ave_sentences_per_paragraph),
-  'End mark frequencies: ' + str(end_marks),
+  'End mark percentages: ' + str(end_marks),
   'Punctuation Frequencies (excluding end marks): ' + str(other_punctuation),
   'Percent of sentences identified to be active, passive, and undetermined: ' + str(percentages_voice),
   'Most frequent nouns: ' + str(top_nouns),
   'Most frequent verbs: ' + str(top_verbs),
   'Most frequent adjectives: ' + str(top_adjectives),
   'Most frequent adverbs: ' + str(top_adverbs),
-  'Part of speech of first word in each sentence frequencies: ' + str(first_word))
+  'Part of speech of first word in each sentence percentages: ' + str(first_word),
+  'Average punctuation marks per sentence (end marks included): ' + str(punctuation_per_sentence),
+  'Average change in words per sentence from sentence to sentence: ' + str(ave_diff))
+  
                
      ### Tkinter GUI ###
   
@@ -502,7 +539,7 @@ def retrieve_input():
     window = Toplevel(root)
     window.title('Writing Statistics')
     retrn = writing_stats(InputValue)
-    for i in range(0, 14):
+    for i in range(0, len(retrn)):
         ttk.Label(window, wraplength=450, anchor=CENTER, text=str(retrn[i]), width = 100).pack()
     
 def retrieve_file_path():
@@ -510,7 +547,7 @@ def retrieve_file_path():
     window = Toplevel(root)
     window.title('Writing Statistics')
     retrn = writing_stats(get_docx_text(file_path))
-    for i in range(0, 14):
+    for i in range(0, len(retrn)):
         ttk.Label(window, wraplength=450, anchor=CENTER, text=str(retrn[i]), width = 100).pack()
     
 
@@ -557,13 +594,12 @@ root.mainloop()
   #   paragraph count
   # - File input can only be docx (Word Document)
   # - For copy and paste text, if there is a space at the end of the text, the program will read it as an extra paragraph
- 
-
-  # - Some symbols make POS tagging not work (ex. *)
 
 
-  #Create error message when string index out of range error
-  #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS 
+      ##Goals##
+
+  #graphs for words_per_sentence, sentences_per_paragraph, POS frequency of first word in sentences, most frequent words for each POS
+  #create classifier of writer types, or similarity to different famous authors? Neural network implementation?
   
 
 
