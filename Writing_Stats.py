@@ -307,9 +307,6 @@ def writing_stats(text):
         other_punctuation['forward slash'] += 1
         letter_count -= 1
         letters_current_word -= 1
-      if letter == '.' or letter == '?' or letter == '!':
-        letter_count -= 1
-        letters_current_word -= 1
       if letter == '!':
         other_punctuation['exclamation point'] += 1
         letter_count -= 1
@@ -502,10 +499,13 @@ def writing_stats(text):
       del count_adjectives[max(count_adjectives, key=count_adjectives.get)]
 
   diff = []
-  for i in range(0,(len(words_per_sentence) - 1)):
-      diff.append(abs(words_per_sentence[i] - words_per_sentence[i+1]))
-  ave_diff = round(sum(diff)/len(diff), 2)
-  
+  if len(words_per_sentence) > 1:
+      for i in range(0,(len(words_per_sentence) - 1)):
+          diff.append(abs(words_per_sentence[i] - words_per_sentence[i+1]))
+      ave_diff = round(sum(diff)/len(diff), 2)
+  else:
+      ave_diff = 0
+      
   pb['value'] = 100
   root.update_idletasks()
 
